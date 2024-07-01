@@ -29,9 +29,14 @@ func processCommand() error {
 		if err != nil {
 			return err
 		}
+	case "submit":
+		err := submit(os.Args[2:])
+		if err != nil {
+			return err
+		}
 	default:
 		emsg := fmt.Sprintf("コマンド'%v'は存在しません\n", cmd)
-		emsg += summaryCommandList([]string{"make", "debug"})
+		emsg += summaryCommandList([]string{"make", "debug", "submit"})
 		return fmt.Errorf(emsg)
 	}
 	return nil
