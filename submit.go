@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 	"os"
-	"path/filepath"
 	"regexp"
 
 	"github.com/PuerkitoBio/goquery"
@@ -43,11 +42,7 @@ func submit(args []string) error {
 	if err != nil && err != io.EOF {
 		return err
 	}
-	curDir, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-	kadaiNum := filepath.Base(curDir) // ex. kadai[01]a
+	kadaiNum := getKadaiNum() // ex. kadai[01]a
 	kadaiName := "kadai" + kadaiNum + args[0]
 	reg := regexp.MustCompile(kadaiName)
 	var a *goquery.Selection

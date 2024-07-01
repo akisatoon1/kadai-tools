@@ -54,12 +54,7 @@ func (debugObj *DebugSet) debug() error {
 }
 
 func debug(args []string) error {
-	curDir, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-
-	kadaiNum := filepath.Base(curDir) // ex. kadai[01]a
+	kadaiNum := getKadaiNum() // ex. kadai[01]a
 	var debugObjs []DebugSet
 
 	// if no args, debug all c files.
