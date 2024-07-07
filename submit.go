@@ -16,12 +16,23 @@ var username = os.Getenv("MANABA_ID")
 var password = os.Getenv("MANABA_PASS")
 
 func submit(args []string) error {
+	//
+	// 不完全
+	// submit -t -r のような形式
+	// 指定した形式以外だった時の処理をしていない
+	//
+
 	// check args
-	if len(args) != 1 {
-		return fmt.Errorf("引数の数は1個です。")
-	}
-	if arg := args[0]; len(arg) != 1 || arg[0] < "a"[0] || "z"[0] < arg[0] {
-		return fmt.Errorf("引数が間違っています")
+	var objs []string
+	var options []string
+	for _, arg := range args {
+		if arg[0:1] == "-" && len(arg[1:]) == 1 {
+			options = append(options, arg[1:])
+		} else if arg[0:1] != "-" && len(arg) == 1 {
+			objs = append(objs, arg)
+		} else {
+			return fmt.Errorf("引数の形式が間違っています")
+		}
 	}
 
 	// login
@@ -42,8 +53,8 @@ func submit(args []string) error {
 	if err != nil && err != io.EOF {
 		return err
 	}
-	kadaiNum := getKadaiNum() // ex. kadai[01]a
-	kadaiName := "kadai" + kadaiNum + args[0]
+	kadaiNum := getKadaiNum()                 // ex. kadai[01]a
+	kadaiName := "kadai" + kadaiNum + objs[0] // 後で
 	reg := regexp.MustCompile(kadaiName)
 	var a *goquery.Selection
 	doc.Find("h3.report-title").Find("a").EachWithBreak(func(_ int, s *goquery.Selection) bool {
@@ -58,6 +69,17 @@ func submit(args []string) error {
 	}
 	url, _ := a.Attr("href")
 	url = "https://room.chuo-u.ac.jp/ct/" + url
+
+	if len(options) == 1 && options[0] == "r" {
+		err = manaba.CancelSubmittion(jar, url)
+		if err != nil {
+			return err
+		}
+		err = manaba.DeleteAllFiles(jar, url)
+		if err != nil {
+			return err
+		}
+	}
 
 	// submit flow
 	err = manaba.UploadFile(jar, url, kadaiName+".c")
