@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -11,9 +12,6 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/akisatoon1/manaba"
 )
-
-var username = os.Getenv("MANABA_ID")
-var password = os.Getenv("MANABA_PASS")
 
 func submit(args []string) error {
 	//
@@ -35,9 +33,14 @@ func submit(args []string) error {
 		}
 	}
 
+	username, password, err := getUsernameAndPasswd()
+	if err != nil {
+		return err
+	}
+
 	// login
 	jar, _ := cookiejar.New(nil)
-	err := manaba.Login(jar, username, password)
+	err = manaba.Login(jar, username, password)
 	if err != nil {
 		return err
 	}
@@ -92,4 +95,20 @@ func submit(args []string) error {
 	}
 
 	return nil
+}
+
+func getUsernameAndPasswd() (string, string, error) {
+	body, err := os.ReadFile(ExeDir + "/login.json")
+	if err != nil {
+		return "", "", err
+	}
+	userData := struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}{}
+	err = json.Unmarshal(body, &userData)
+	if err != nil {
+		return "", "", err
+	}
+	return userData.Username, userData.Password, nil
 }
