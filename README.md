@@ -10,8 +10,32 @@
 のような作業を、ツールのコマンドを叩くだけで完了します。
 
 ## 準備
-[//]: #(tmpl.cとパスワードについて)
+実行ファイルと同じディレクトリに、`tmpl.c`と`login.json`があります。無い場合は追加してください。それぞれのファイルに役割があります。
 
+### tmpl.c
+```c:tmpl.c
+// kadai{{.Num}}{{.Level}}
+
+#include <stdio.h>
+
+int main (void) {
+    return 0;
+}
+```
+C言語のテンプレートをこのファイルに書いてください。
+  
+`kadai01a`の`01`の部分を埋め込みたいときは`{{.Num}}`、`a`の部分を埋め込みたいときは`{{.Level}}`を使用してください。
+
+### login.json
+```json:login.json
+{
+    "username": "your student ID",
+    "password": "your password"
+}
+```
+manabaに提出するときに使います。
+  
+総合認証に使う学籍番号とパスワードをそれぞれの`""`の中に書いてください。
 ## 使い方
 
 ### make
@@ -37,7 +61,7 @@ inputa1.txt  inputx1.txt
 ```
 最初の引数はディレクトリ名、残りの引数はそれぞれの課題を表します。
   
-[//]: #(tmplについて)
+それぞれ作成した`*.c`ファイルに`tmpl.c`で設定したテンプレートを書き込みます。
 ### debug
 ```
 ~/01$ kadai debug a
