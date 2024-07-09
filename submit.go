@@ -82,10 +82,12 @@ func submit(args []string) error {
 		if err != nil {
 			return err
 		}
+		fmt.Printf("'%v'のレポートを提出取り消ししました\n", kadaiName)
 	}
 
 	// submit flow
-	err = manaba.UploadFile(jar, url, kadaiName+".c")
+	fileName := kadaiName + ".c"
+	err = manaba.UploadFile(jar, url, fileName)
 	if err != nil {
 		return err
 	}
@@ -94,6 +96,7 @@ func submit(args []string) error {
 		return err
 	}
 
+	fmt.Printf("'%v'を提出しました\n", fileName)
 	return nil
 }
 
