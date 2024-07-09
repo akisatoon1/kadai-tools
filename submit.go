@@ -14,23 +14,26 @@ import (
 )
 
 func submit(args []string) error {
-	//
-	// 不完全
-	// submit -t -r のような形式
-	// 指定した形式以外だった時の処理をしていない
-	//
-
-	// check args
-	var objs []string
-	var options []string
-	for _, arg := range args {
-		if arg[0:1] == "-" && len(arg[1:]) == 1 {
-			options = append(options, arg[1:])
-		} else if arg[0:1] != "-" && len(arg) == 1 {
-			objs = append(objs, arg)
-		} else {
-			return fmt.Errorf("引数の形式が間違っています")
+	// handle args
+	var isResubmit bool
+	var kadaiLevel string
+	if l := len(args); l == 1 {
+		if !ReFile.MatchString(args[0]) {
+			return fmt.Errorf("引数が間違っています")
 		}
+		kadaiLevel = args[0]
+		isResubmit = false
+	} else if l == 2 {
+		if args[0] != "-r" {
+			return fmt.Errorf("引数が間違っています")
+		}
+		if !ReFile.MatchString(args[1]) {
+			return fmt.Errorf("第2引数は英小文字1文字のみです")
+		}
+		kadaiLevel = args[1]
+		isResubmit = true
+	} else {
+		return fmt.Errorf("引数の数は1つまたは2つです")
 	}
 
 	username, password, err := getUsernameAndPasswd()
@@ -56,8 +59,8 @@ func submit(args []string) error {
 	if err != nil && err != io.EOF {
 		return err
 	}
-	kadaiNum := getKadaiNum()                 // ex. kadai[01]a
-	kadaiName := "kadai" + kadaiNum + objs[0] // 後で
+	kadaiNum := getKadaiNum()                    // ex. kadai[01]a
+	kadaiName := "kadai" + kadaiNum + kadaiLevel // 後で
 	reg := regexp.MustCompile(kadaiName)
 	var a *goquery.Selection
 	doc.Find("h3.report-title").Find("a").EachWithBreak(func(_ int, s *goquery.Selection) bool {
@@ -73,7 +76,7 @@ func submit(args []string) error {
 	url, _ := a.Attr("href")
 	url = "https://room.chuo-u.ac.jp/ct/" + url
 
-	if len(options) == 1 && options[0] == "r" {
+	if isResubmit {
 		err = manaba.CancelSubmittion(jar, url)
 		if err != nil {
 			return err
