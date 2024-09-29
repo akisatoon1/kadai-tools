@@ -26,16 +26,17 @@ C言語のテンプレートをこのファイルに書いてください。
   
 `kadai01a`の`01`の部分を埋め込みたいときは`{{.Num}}`、`a`の部分を埋め込みたいときは`{{.Level}}`を使用してください。
 
-### login.json
-```json:login.json
+### settings.json
+```json:settings.json
 {
     "username": "your student ID",
-    "password": "your password"
+    "password": "your password",
+    "lang": "c or c++"
 }
 ```
-manabaに提出するときに使います。
+`username`と`password`はmanabaに提出するときに使います。総合認証に使う学籍番号とパスワードをそれぞれの`""`の中に書いてください。
   
-総合認証に使う学籍番号とパスワードをそれぞれの`""`の中に書いてください。
+`lang`はファイル生成時の拡張子や`kadai debug`時に使うコンパイラを決めます。現在`c`と`c++`が使用でき、`c`のときはgcc、`c++`のときはg++を使用します。
 ## 使い方
 
 ### make
