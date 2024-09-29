@@ -79,9 +79,19 @@ func make(args []string) error {
 	}
 
 	// make files and input files
+	lang, err := getLang()
+	if err != nil {
+		return err
+	}
+	var ext string
+	if lang == "c" {
+		ext = "c"
+	} else if lang == "c++" {
+		ext = "cpp"
+	}
 	levels := args[1:]
 	for _, level := range levels {
-		filename := fmt.Sprintf("./%v/kadai%v%v.c", Dir, Dir, level)
+		filename := fmt.Sprintf("./%v/kadai%v%v.%v", Dir, Dir, level, ext)
 		fpKadai, _ := os.Create(filename)
 		fmt.Println(filename + " 作成")
 		defer fpKadai.Close()

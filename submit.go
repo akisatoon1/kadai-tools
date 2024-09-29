@@ -104,7 +104,7 @@ func submit(args []string) error {
 }
 
 func getUsernameAndPasswd() (string, string, error) {
-	body, err := os.ReadFile(ExeDir + "/login.json")
+	body, err := os.ReadFile(ExeDir + "/" + SettingsFile)
 	if err != nil {
 		return "", "", err
 	}
