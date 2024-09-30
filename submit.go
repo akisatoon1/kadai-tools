@@ -88,8 +88,20 @@ func submit(args []string) error {
 		fmt.Printf("'%v'のレポートを提出取り消ししました\n", kadaiName)
 	}
 
+	// determine file extension
+	lang, err := getLang()
+	if err != nil {
+		return err
+	}
+	var ext string
+	if lang == "c" {
+		ext = "c"
+	} else if lang == "c++" {
+		ext = "cpp"
+	}
+
 	// submit flow
-	fileName := kadaiName + ".c"
+	fileName := kadaiName + "." + ext
 	err = manaba.UploadFile(jar, url, fileName)
 	if err != nil {
 		return err
