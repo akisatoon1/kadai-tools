@@ -32,3 +32,23 @@ func getLang() (string, error) {
 	}
 	return data.Lang, nil
 }
+
+func getFileExt(lang string) (string, error) {
+	if lang == "c" {
+		return "c", nil
+	} else if lang == "c++" {
+		return "cpp", nil
+	} else {
+		return "", fmt.Errorf("使用できない言語です。lang: '%v'", lang)
+	}
+}
+
+func getCompilerName(lang string) (string, error) {
+	if lang == "c" {
+		return "gcc", nil
+	} else if lang == "c++" {
+		return "g++", nil
+	} else {
+		return "", fmt.Errorf("使用できない言語です。lang: '%v'", lang)
+	}
+}

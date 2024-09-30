@@ -93,11 +93,9 @@ func submit(args []string) error {
 	if err != nil {
 		return err
 	}
-	var ext string
-	if lang == "c" {
-		ext = "c"
-	} else if lang == "c++" {
-		ext = "cpp"
+	ext, err := getFileExt(lang)
+	if err != nil {
+		return err
 	}
 
 	// submit flow

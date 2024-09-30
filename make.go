@@ -78,17 +78,20 @@ func make(args []string) error {
 		fmt.Println("テンプレート無し")
 	}
 
+	//
 	// make files and input files
+	//
+
+	// get file ext
 	lang, err := getLang()
 	if err != nil {
 		return err
 	}
-	var ext string
-	if lang == "c" {
-		ext = "c"
-	} else if lang == "c++" {
-		ext = "cpp"
+	ext, err := getFileExt(lang)
+	if err != nil {
+		return err
 	}
+
 	levels := args[1:]
 	for _, level := range levels {
 		filename := fmt.Sprintf("./%v/kadai%v%v.%v", Dir, Dir, level, ext)
